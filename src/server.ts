@@ -26,7 +26,7 @@ app.use("/api/posts", postRoutes)
 app.use("/api/subs", subRoutes)
 
 app.listen(PORT, async () => {
-  console.log("Server running at http://localhost:5000")
+  console.log(`Server running at http://localhost:${PORT}`)
 
   try {
     await createConnection()

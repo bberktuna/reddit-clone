@@ -1,4 +1,3 @@
-import { create } from "domain"
 import { Router, Request, Response } from "express"
 import auth from "../middleware/auth"
 
