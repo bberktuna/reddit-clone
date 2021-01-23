@@ -7,12 +7,19 @@ import cookie from "cookie"
 import User from "../entities/User"
 import auth from "../middleware/auth"
 
+const mapErrors = (errors: Object[]) => {
+  return errors.reduce((prev: any, err: any) => {
+    prev[err.property] = Object.entries(err.constraints)[0][1]
+    return prev
+  }, {})
+}
+
 //! REGISTER
 const register = async (req: Request, res: Response) => {
   const { email, username, password } = req.body
 
   try {
-    // TODO: Validate data
+    // Validate data
     let errors: any = {}
     const emailUser = await User.findOne({ email })
     const usernameUser = await User.findOne({ username })
@@ -24,15 +31,17 @@ const register = async (req: Request, res: Response) => {
       return res.status(400).json(errors)
     }
 
-    // TODO: Create the user
+    // Create the user
     const user = new User({ email, username, password })
 
     errors = await validate(user)
-    if (errors.length > 0) return res.status(400).json({ errors })
+    if (errors.length > 0) {
+      return res.status(400).json(mapErrors(errors))
+    }
 
     await user.save()
 
-    // TODO: Return the user
+    // Return the user
     return res.json(user)
   } catch (err) {
     console.log(err)
@@ -102,7 +111,7 @@ const logout = (_: Request, res: Response) => {
 
 const router = Router()
 router.post("/register", register)
-router.get("/login", login)
+router.post("/login", login)
 router.get("/me", auth, me)
 router.get("/logout", auth, logout)
 
