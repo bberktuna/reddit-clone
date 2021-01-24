@@ -1,7 +1,7 @@
 import { AppProps } from "next/app"
 import Axios from "axios"
-import { Fragment } from "react"
 import { useRouter } from "next/router"
+import { SWRConfig } from "swr"
 
 import Navbar from "../components/Navbar"
 import "../styles/tailwind.css"
@@ -14,10 +14,17 @@ function App({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter()
   const authRoute = pathname === "/register" || pathname === "/login"
   return (
-    <AuthProvider>
-      {!authRoute && <Navbar />}
-      <Component {...pageProps} />
-    </AuthProvider>
+    <SWRConfig
+      value={{
+        fetcher: (url) => Axios.get(url).then((res) => res.data),
+        dedupingInterval: 10000,
+      }}
+    >
+      <AuthProvider>
+        {!authRoute && <Navbar />}
+        <Component {...pageProps} />
+      </AuthProvider>
+    </SWRConfig>
   )
 }
 

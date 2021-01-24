@@ -4,6 +4,7 @@ import Axios from "axios"
 import Link from "next/link"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
+import useSWR from "swr"
 
 import { Post } from "../../types"
 import PostCard from "../components/PostCard"
@@ -12,13 +13,8 @@ dayjs.extend(relativeTime)
 
 export default function Home() {
   //destructure the posts for SSR
-  const [posts, setPosts] = useState<Post[]>([])
 
-  useEffect(() => {
-    Axios.get("posts")
-      .then((res) => setPosts(res.data))
-      .catch((err) => console.log(err))
-  }, [])
+  const { data: posts } = useSWR("/posts")
 
   return (
     <div className="pt-12">
@@ -29,7 +25,7 @@ export default function Home() {
       <div className="container flex pt-4">
         {/* Posts feed*/}
         <div className="white-160">
-          {posts.map((post) => (
+          {posts?.map((post) => (
             <PostCard post={post} key={post.identifier} />
           ))}
         </div>
