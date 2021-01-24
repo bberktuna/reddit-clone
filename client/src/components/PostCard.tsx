@@ -118,7 +118,7 @@ const PostCard = ({
             <a>
               <ActionButton>
                 <i className="mr-1 fas fa-comment-alt fa-xs"></i>
-                <span className="font-bold">{commentCount} </span>
+                <span className="font-bold">{commentCount} Comments</span>
               </ActionButton>
             </a>
           </Link>

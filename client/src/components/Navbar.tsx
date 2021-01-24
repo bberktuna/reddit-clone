@@ -5,14 +5,14 @@ import { Fragment } from "react"
 import Axios from "axios"
 
 const Navbar: React.FC = () => {
-  const { authenticated } = useAuthState()
+  const { authenticated, loading } = useAuthState()
 
   const dispatch = useAuthDispatch()
 
   const logout = () => {
     Axios.get("/auth/logout")
       .then(() => {
-        dispatch({ type: "LOGOUT" })
+        dispatch("LOGOUT")
         window.location.reload()
       })
       .catch((err) => console.log(err))
@@ -42,26 +42,27 @@ const Navbar: React.FC = () => {
       {/* Auth buttons */}
 
       <div className="flex">
-        {authenticated ? (
-          //! Show logout
-          <button
-            className="w-32 px-5 py-1 mr-4 leading-6 hollow blue button"
-            onClick={logout}
-          >
-            Logout
-          </button>
-        ) : (
-          <Fragment>
-            <Link href="/login">
-              <a className="w-32 px-5 py-1 mr-4 leading-6 hollow blue button">
-                log in
-              </a>
-            </Link>
-            <Link href="/register">
-              <a className="w-32 py-1 leading-6 blue button">sign up</a>
-            </Link>
-          </Fragment>
-        )}
+        {!loading &&
+          (authenticated ? (
+            //! Show logout
+            <button
+              className="w-32 px-5 py-1 mr-4 leading-6 hollow blue button"
+              onClick={logout}
+            >
+              Logout
+            </button>
+          ) : (
+            <Fragment>
+              <Link href="/login">
+                <a className="w-32 px-5 py-1 mr-4 leading-6 hollow blue button">
+                  log in
+                </a>
+              </Link>
+              <Link href="/register">
+                <a className="w-32 py-1 leading-6 blue button">sign up</a>
+              </Link>
+            </Fragment>
+          ))}
       </div>
     </div>
   )
