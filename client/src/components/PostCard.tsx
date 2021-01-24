@@ -4,12 +4,11 @@ import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 
 import { Post } from "./../../types"
+import Axios from "axios"
+import classNames from "classnames"
 
 dayjs.extend(relativeTime)
 
-interface PostCardProps {
-  post: Post
-}
 const ActionButton = ({ children }) => {
   return (
     <div className="px-1 py-1 mr-1 text-xs text-gray-400 rounded cursor-pointer hover:bg-gray-200">
@@ -17,59 +16,109 @@ const ActionButton = ({ children }) => {
     </div>
   )
 }
-const PostCard = ({ post }: PostCardProps) => {
+
+interface PostCardProps {
+  post: Post
+}
+
+const PostCard = ({
+  post: {
+    identifier,
+    slug,
+    title,
+    body,
+    subName,
+    createdAt,
+    updatedAt,
+    voteScore,
+    userVote,
+    commentCount,
+    url,
+    username,
+  },
+}: PostCardProps) => {
+  const vote = async (value) => {
+    try {
+      const res = await Axios.post("/misc/vote", {
+        identifier,
+        slug,
+        value,
+      })
+      console.log(res.data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
   return (
-    <div key={post.identifier} className="flex mb-4 bg-white rounded">
+    <div key={identifier} className="flex mb-4 bg-white rounded">
       {/* Vote section */}
       <div className="w-10 py-3 text-center bg-gray-200 rounded-l">
         {/* Upvote */}
-        <i className="w-6 mx-auto text-gray-400 rounded cursor-pointer fas fa-arrow-up hover:bg-gray-300 hover:text-red-500"></i>
+        <div
+          className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-red-500"
+          onClick={() => vote(1)}
+        >
+          <i
+            className={classNames("fas fa-arrow-up", {
+              "text-red-500": userVote === 1,
+            })}
+          ></i>
+        </div>
 
         {/* Vote Count */}
-        <p className="text-xs font-bold">{post.voteScore} </p>
+        <p className="text-xs font-bold">{voteScore} </p>
 
         {/* Downvote */}
-        <i className="w-6 mx-auto text-gray-400 rounded cursor-pointer fas fa-arrow-down hover:bg-gray-300 hover:text-blue-500"></i>
+        <div
+          className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-blue-500"
+          onClick={() => vote(-1)}
+        >
+          <i
+            className={classNames("fas fa-arrow-down", {
+              "text-blue-500": userVote === -1,
+            })}
+          ></i>
+        </div>
       </div>
 
       {/* Post data section */}
       <div className="w-full p-2">
         <div className="flex items-center">
-          <Link href={`/r/${post.subName}`}>
+          <Link href={`/r/${subName}`}>
             <Fragment>
               <img
                 src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
                 className="w-6 h-6 mr-1 rounded-full cursor-poiner"
               />
               <a href="" className="text-xs font-bold hover:underline">
-                /r/{post.subName}
+                /r/{subName}
               </a>
             </Fragment>
           </Link>
           <p className="text-xs text-gray-500">
             <span className="mx-1">•</span>
             Posted by
-            <Link href={`/u/${post.username}`}>
-              <a className="mx-1 hover:underline">/u/{post.username}</a>
+            <Link href={`/u/${username}`}>
+              <a className="mx-1 hover:underline">/u/{username}</a>
             </Link>
-            <Link href={`/r/${post.subName}/${post.identifier}/${post.slug}`}>
+            <Link href={`/r/${subName}/${identifier}/${slug}`}>
               <a className="mx-1 hover:underline">
-                {dayjs(post.createdAt).fromNow()}
+                {dayjs(createdAt).fromNow()}
               </a>
             </Link>
           </p>
         </div>
-        <Link href={post.url}>
-          <a className="my-1 text-lg font-medium">{post.title} </a>
+        <Link href={url}>
+          <a className="my-1 text-lg font-medium">{title} </a>
         </Link>
-        {post.body && <p className="my-1 text-sm"> {post.body} </p>}
+        {body && <p className="my-1 text-sm"> {body} </p>}
 
         <div className="flex">
-          <Link href={post.url}>
+          <Link href={url}>
             <a>
               <ActionButton>
                 <i className="mr-1 fas fa-comment-alt fa-xs"></i>
-                <span className="font-bold">{post.commentCount} </span>
+                <span className="font-bold">{commentCount} </span>
               </ActionButton>
             </a>
           </Link>

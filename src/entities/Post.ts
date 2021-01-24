@@ -72,17 +72,12 @@ export default class Post extends Entity {
 
   @Expose()
   get voteScore(): number {
-    return this.votes?.reduce(
-      (prev: any, curr: any) => prev + (curr.value || 0),
-      0
-    )
+    return this.votes?.reduce((prev, curr) => prev + (curr.value || 0), 0)
   }
 
   protected userVote: number
   setUserVote(user: User) {
-    const index = this.votes?.findIndex(
-      (v: any) => v.username === user.username
-    )
+    const index = this.votes?.findIndex((v) => v.username === user.username)
     this.userVote = index > -1 ? this.votes[index].value : 0
   }
 
