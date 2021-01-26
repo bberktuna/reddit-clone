@@ -10,19 +10,30 @@ import { AuthProvider } from "./../context/auth"
 Axios.defaults.baseURL = "http://localhost:5000/api"
 Axios.defaults.withCredentials = true
 
+const fetcher = async (url: string) => {
+  try {
+    const res = await Axios.get(url)
+    return res.data
+  } catch (err) {
+    throw err.response.data
+  }
+}
+
 function App({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter()
   const authRoute = pathname === "/register" || pathname === "/login"
   return (
     <SWRConfig
       value={{
-        fetcher: (url) => Axios.get(url).then((res) => res.data),
+        fetcher,
         dedupingInterval: 10000,
       }}
     >
       <AuthProvider>
-        {!authRoute && <Navbar />}
-        <Component {...pageProps} />
+        <div className={authRoute ? "" : "pt-12"}>
+          {!authRoute && <Navbar />}
+          <Component {...pageProps} />
+        </div>
       </AuthProvider>
     </SWRConfig>
   )

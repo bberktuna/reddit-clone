@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express"
 import { isEmpty } from "class-validator"
 import { getRepository } from "typeorm"
+import multer from "multer"
 
 import User from "../entities/User"
 import Sub from "../entities/Sub"
@@ -50,6 +51,7 @@ const getSub = async (req: Request, res: Response) => {
     const sub = await Sub.findOneOrFail({ name })
     const posts = await Post.find({
       where: { sub },
+      order: { createdAt: "DESC" },
       relations: ["comments", "votes"],
     })
 
@@ -62,13 +64,17 @@ const getSub = async (req: Request, res: Response) => {
     return res.json(sub)
   } catch (err) {
     console.log(err)
-    return res.status(500).json({ error: "Something went wrong with getSub" })
+    return res.status(404).json({ sub: "Sub not found" })
   }
 }
+
+const upload = multer({})
+
+const uploadSubImage = async (req: Request, res: Response) => {}
 
 const router = Router()
 
 router.post("/", user, auth, createSub)
 router.get("/:name", user, getSub)
-
+router.post("/:name/image", user, auth, uploadSubImage)
 export default router

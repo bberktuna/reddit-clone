@@ -17,7 +17,7 @@ export default function Home() {
   const { data: posts } = useSWR("/posts")
 
   return (
-    <div className="pt-12">
+    <Fragment>
       <Head>
         <title>reddit: the front page of the internet</title>
         {/*<link rel="icon" href="/reddit.svg" />*/}
@@ -31,7 +31,7 @@ export default function Home() {
         </div>
         {/* Sidebar*/}
       </div>
-    </div>
+    </Fragment>
   )
 }
 /*
