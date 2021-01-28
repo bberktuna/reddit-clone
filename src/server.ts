@@ -28,6 +28,7 @@ app.use(
     optionsSuccessStatus: 200,
   })
 )
+app.use(express.static("public")) //! makes pictures accesable
 
 app.get("/", (_, res) => res.send("Hello World"))
 app.use("/api/auth", authRoutes)
