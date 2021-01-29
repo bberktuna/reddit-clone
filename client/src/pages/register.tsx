@@ -96,12 +96,12 @@ export default function Register() {
               error={errors.password}
             />
 
-            <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase bg-blue-500 border border-blue-500 rounded">
+            <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase bg-blue-500 border border-blue-500 rounded hover:bg-blue-400">
               Sign Up
             </button>
           </form>
           <small>
-            Already a readitor?
+            Already have an account?
             <Link href="/login">
               <a className="ml-1 text-blue-500 uppercase">Log In</a>
             </Link>

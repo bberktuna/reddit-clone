@@ -31,7 +31,7 @@ export default function Register() {
       dispatch("LOGIN", res.data)
       //!dispatch an action of type login , payload is resdata from the request at the top
 
-      router.push("/")
+      router.back()
     } catch (err) {
       setErrors(err.response.data)
     }
@@ -71,12 +71,12 @@ export default function Register() {
               error={errors.password}
             />
 
-            <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase bg-blue-500 border border-blue-500 rounded">
+            <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase bg-blue-500 border border-blue-500 rounded hover:bg-blue-400">
               Login
             </button>
           </form>
           <small>
-            New to Readit?
+            Don't have an account?
             <Link href="/register">
               <a className="ml-1 text-blue-500 uppercase">Sign Up</a>
             </Link>
