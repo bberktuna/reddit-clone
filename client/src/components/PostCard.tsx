@@ -39,12 +39,11 @@ const PostCard = ({
 }: PostCardProps) => {
   const vote = async (value) => {
     try {
-      const res = await Axios.post("/misc/vote", {
+      await Axios.post("/misc/vote", {
         identifier,
         slug,
         value,
       })
-      console.log(res.data)
     } catch (err) {
       console.log(err)
     }
