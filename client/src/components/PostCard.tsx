@@ -1,27 +1,19 @@
 import Link from "next/link"
-import React, { Fragment } from "react"
+import Axios from "axios"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
-
-import { Post } from "./../../types"
-import Axios from "axios"
 import classNames from "classnames"
 
-dayjs.extend(relativeTime)
+import { Post } from "../../types"
+import ActionButton from "./ActionButton"
 
-const ActionButton = ({ children }) => {
-  return (
-    <div className="px-1 py-1 mr-1 text-xs text-gray-400 rounded cursor-pointer hover:bg-gray-200">
-      {children}
-    </div>
-  )
-}
+dayjs.extend(relativeTime)
 
 interface PostCardProps {
   post: Post
 }
 
-const PostCard = ({
+export default function PostCard({
   post: {
     identifier,
     slug,
@@ -29,25 +21,27 @@ const PostCard = ({
     body,
     subName,
     createdAt,
-    updatedAt,
     voteScore,
     userVote,
     commentCount,
     url,
     username,
   },
-}: PostCardProps) => {
-  const vote = async (value) => {
+}: PostCardProps) {
+  const vote = async (value: number) => {
     try {
-      await Axios.post("/misc/vote", {
+      const res = await Axios.post("/misc/vote", {
         identifier,
         slug,
         value,
       })
+
+      console.log(res.data)
     } catch (err) {
       console.log(err)
     }
   }
+
   return (
     <div key={identifier} className="flex mb-4 bg-white rounded">
       {/* Vote section */}
@@ -58,28 +52,24 @@ const PostCard = ({
           onClick={() => vote(1)}
         >
           <i
-            className={classNames("fas fa-arrow-up", {
+            className={classNames("icon-arrow-up", {
               "text-red-500": userVote === 1,
             })}
           ></i>
         </div>
-
-        {/* Vote Count */}
-        <p className="text-xs font-bold">{voteScore} </p>
-
+        <p className="text-xs font-bold">{voteScore}</p>
         {/* Downvote */}
         <div
-          className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-blue-500"
+          className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-blue-600"
           onClick={() => vote(-1)}
         >
           <i
-            className={classNames("fas fa-arrow-down", {
-              "text-blue-500": userVote === -1,
+            className={classNames("icon-arrow-down", {
+              "text-blue-600": userVote === -1,
             })}
           ></i>
         </div>
       </div>
-
       {/* Post data section */}
       <div className="w-full p-2">
         <div className="flex items-center">
@@ -90,7 +80,9 @@ const PostCard = ({
             />
           </Link>
           <Link href={`/r/${subName}`}>
-            <a className="text-xs font-bold hover:underline">/r/{subName}</a>
+            <a className="text-xs font-bold cursor-pointer hover:underline">
+              /r/{subName}
+            </a>
           </Link>
           <p className="text-xs text-gray-500">
             <span className="mx-1">•</span>
@@ -98,7 +90,7 @@ const PostCard = ({
             <Link href={`/u/${username}`}>
               <a className="mx-1 hover:underline">/u/{username}</a>
             </Link>
-            <Link href={`/r/${subName}/${identifier}/${slug}`}>
+            <Link href={url}>
               <a className="mx-1 hover:underline">
                 {dayjs(createdAt).fromNow()}
               </a>
@@ -106,9 +98,9 @@ const PostCard = ({
           </p>
         </div>
         <Link href={url}>
-          <a className="my-1 text-lg font-medium">{title} </a>
+          <a className="my-1 text-lg font-medium">{title}</a>
         </Link>
-        {body && <p className="my-1 text-sm"> {body} </p>}
+        {body && <p className="my-1 text-sm">{body}</p>}
 
         <div className="flex">
           <Link href={url}>
@@ -119,22 +111,16 @@ const PostCard = ({
               </ActionButton>
             </a>
           </Link>
-          <a>
-            <ActionButton>
-              <i className="mr-1 fas fa-share fa-xs"></i>
-              <span className="font-bold">Share</span>
-            </ActionButton>
-          </a>
-          <a>
-            <ActionButton>
-              <i className="mr-1 fas fa-bookmark fa-xs"></i>
-              <span className="font-bold">Save</span>
-            </ActionButton>
-          </a>
+          <ActionButton>
+            <i className="mr-1 fas fa-share fa-xs"></i>
+            <span className="font-bold">Share</span>
+          </ActionButton>
+          <ActionButton>
+            <i className="mr-1 fas fa-bookmark fa-xs"></i>
+            <span className="font-bold">Save</span>
+          </ActionButton>
         </div>
       </div>
     </div>
   )
 }
-
-export default PostCard

@@ -48,7 +48,7 @@ export default function PostPage() {
       value = 0
 
     try {
-      await Axios.ty("/misc/vote", {
+      await Axios.post("/misc/vote", {
         identifier,
         slug,
         commentIdentifier: comment?.identifier,

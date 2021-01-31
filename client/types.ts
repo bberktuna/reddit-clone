@@ -1,14 +1,14 @@
 export interface Post {
   identifier: string
   title: string
+  body?: string
   slug: string
   subName: string
+  username: string
   createdAt: string
   updatedAt: string
-  username: string
-  body?: string
   sub?: Sub
-  // virtual fields
+  // Virtual fields
   url: string
   voteScore?: number
   commentCount?: number
@@ -39,11 +39,12 @@ export interface Sub {
 }
 
 export interface Comment {
-  createdAt: string
-  updatedAt: string
   identifier: string
   body: string
   username: string
+  createdAt: string
+  updatedAt: string
+  post?: Post
   // Virtuals
   userVote: number
   voteScore: number
