@@ -62,6 +62,10 @@ const getPost = async (req: Request, res: Response) => {
       }
     )
 
+    if (res.locals.user) {
+      post.setUserVote(res.locals.user)
+    }
+
     return res.json(post)
   } catch (err) {
     console.log(err)
@@ -92,6 +96,6 @@ const router = Router()
 
 router.post("/", user, auth, createPost)
 router.get("/", user, getPosts) // PUBLIC NO MIDDLEWARE
-router.get("/:identifier/:slug", getPost) // PUBLIC NO MIDDLEWARE
+router.get("/:identifier/:slug", user, getPost) // PUBLIC NO MIDDLEWARE
 router.post("/:identifier/:slug/comments", user, auth, commentOnPost)
 export default router

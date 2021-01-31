@@ -7,6 +7,7 @@ export interface Post {
   updatedAt: string
   username: string
   body?: string
+  sub?: Sub
   // virtual fields
   url: string
   voteScore?: number
