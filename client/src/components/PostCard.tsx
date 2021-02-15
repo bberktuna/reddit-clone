@@ -8,6 +8,7 @@ import ActionButton from "./ActionButton"
 import { useAuthState } from "../context/auth"
 import { useRouter } from "next/router"
 import { Post } from "../../types"
+import { useEffect } from "react"
 
 dayjs.extend(relativeTime)
 

@@ -32,6 +32,9 @@ export default class Sub extends Entity {
   @Column({ nullable: true })
   imageUrn: string
 
+  @Column()
+  typeOfSub: string
+
   @Column({ nullable: true })
   bannerUrn: string
 

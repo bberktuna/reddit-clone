@@ -6,7 +6,6 @@ import { SWRConfig } from "swr"
 import { AuthProvider } from "../context/auth"
 
 import "../styles/tailwind.css"
-import "../styles/icons.css"
 
 import Navbar from "../components/Navbar"
 

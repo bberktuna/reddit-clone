@@ -10,6 +10,8 @@ import { Post, Sub } from "../../types"
 import PostCard from "../components/PostCard"
 import Link from "next/link"
 import { useAuthState } from "../context/auth"
+import LeftMenu from "./../components/LeftMenu"
+import Axios from "axios"
 
 dayjs.extend(relativeTime)
 
@@ -73,7 +75,9 @@ export default function Home() {
         <meta property="twitter:description" content={description} />
         <meta property="twitter:title" content={title} />
       </Head>
-      <div className="container flex pt-4">
+      <div className="flex justify-center w-full pt-4 align-middle">
+        {/* Menu bar */}
+        <LeftMenu />
         {/* Posts feed */}
         <div className="w-full px-4 md:w-160 md:p-0">
           {isInitialLoading && <p className="text-lg text-center">Loading..</p>}
@@ -138,12 +142,15 @@ export default function Home() {
   )
 }
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   try {
-//     const res = await Axios.get('/posts')
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  try {
+    const cookie = req.headers.cookie
+    if (!cookie) throw new Error("Missing auth token cookie")
 
-//     return { props: { posts: res.data } }
-//   } catch (err) {
-//     return { props: { error: 'Something went wrong' } }
-//   }
-// }
+    await Axios.get("/auth/me", { headers: { cookie } })
+
+    return { props: {} }
+  } catch (err) {
+    res.writeHead(307, { Location: "/login" }).end()
+  }
+}

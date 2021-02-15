@@ -6,6 +6,7 @@ import { useRouter } from "next/router"
 
 import InputGroup from "../components/InputGroup"
 import { useAuthDispatch, useAuthState } from "../context/auth"
+import { Post } from "../../types"
 
 export default function Register() {
   const [username, setUsername] = useState("")

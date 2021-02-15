@@ -20,6 +20,11 @@ export interface User {
   email: string
   createdAt: string
   updatedAt: string
+  userImageUrn: string
+  userBannerUrn: string
+  // Virtuals
+  userImageUrl: string
+  userBannerUrl: string
 }
 
 export interface Sub {
