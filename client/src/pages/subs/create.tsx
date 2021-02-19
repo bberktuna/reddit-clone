@@ -9,6 +9,7 @@ export default function create() {
   const [name, setName] = useState("")
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
+  const [isPrivate, setIsPrivate] = useState(false)
 
   const [errors, setErrors] = useState<Partial<any>>({})
 
@@ -18,7 +19,12 @@ export default function create() {
     event.preventDefault()
 
     try {
-      const res = await Axios.post("/subs", { name, title, description })
+      const res = await Axios.post("/subs", {
+        name,
+        title,
+        description,
+        isPrivate,
+      })
 
       router.push(`/r/${res.data.name}`)
     } catch (err) {
@@ -33,8 +39,8 @@ export default function create() {
         <title>Create a Community</title>
       </Head>
       <div
-        className="h-screen bg-center bg-cover w-36"
-        style={{ backgroundImage: "url('/images/bricks.jpg')" }}
+        className="h-screen bg-center bg-cover w-80"
+        style={{ backgroundImage: "url('/images/37.jpg')" }}
       ></div>
       <div className="flex flex-col justify-center pl-6">
         <div className="w-98">
@@ -90,6 +96,29 @@ export default function create() {
               <small className="font-medium text-red-600">
                 {errors.description}
               </small>
+            </div>
+            {/* SUBTYPE ADD RESTRICTED TYPE LATER */}
+            <div className="flex flex-col">
+              <span>
+                <input
+                  className="mr-2"
+                  type="radio"
+                  name="subType"
+                  value="publicSub"
+                  onChange={() => setIsPrivate(false)}
+                />
+                Public
+              </span>
+              <span>
+                <input
+                  className="mr-2 "
+                  type="radio"
+                  name="subType"
+                  value="restrictedSub"
+                  onChange={() => setIsPrivate(true)}
+                />
+                Private
+              </span>
             </div>
             <div className="flex justify-end">
               <button className="px-4 py-1 text-sm font-semibold capitalize blue button">

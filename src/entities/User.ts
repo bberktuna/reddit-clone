@@ -5,6 +5,8 @@ import {
   Index,
   BeforeInsert,
   OneToMany,
+  OneToOne,
+  ManyToOne,
 } from "typeorm"
 import bcrypt from "bcrypt"
 import { Exclude } from "class-transformer"
@@ -12,6 +14,7 @@ import { Exclude } from "class-transformer"
 import Entity from "./Entity"
 import Post from "./Post"
 import Vote from "./Vote"
+import Sub from "./Sub"
 
 @TOEntity("users")
 export default class User extends Entity {
@@ -21,19 +24,23 @@ export default class User extends Entity {
   }
 
   @Index()
-  @IsEmail(undefined, { message: "Must be a valid email" })
+  @IsEmail(undefined, { message: "Must be a valid email address" })
   @Length(1, 255, { message: "Email is empty" })
   @Column({ unique: true })
   email: string
 
   @Index()
-  @Length(3, 255, { message: "Username must be at least 3 characters long" })
+  @Length(3, 255, { message: "Must be at least 3 characters long" })
   @Column({ unique: true })
   username: string
 
+  @Column()
+  @ManyToOne(() => Sub, (joinedSub) => joinedSub.member)
+  joinedSub: Sub
+
   @Exclude()
   @Column()
-  @Length(6, 255, { message: "Password must be at least 3 characters long" })
+  @Length(6, 255, { message: "Must be at least 6 characters long" })
   password: string
 
   @OneToMany(() => Post, (post) => post.user)

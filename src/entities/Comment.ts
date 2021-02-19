@@ -6,17 +6,17 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-} from "typeorm"
+} from 'typeorm'
 
-import Entity from "./Entity"
-import Post from "./Post"
-import User from "./User"
+import Entity from './Entity'
+import Post from './Post'
+import User from './User'
 
-import { makeId } from "../util/helpers"
-import Vote from "./Vote"
-import { Exclude, Expose } from "class-transformer"
+import { makeId } from '../util/helpers'
+import Vote from './Vote'
+import { Exclude, Expose } from 'class-transformer'
 
-@TOEntity("comments")
+@TOEntity('comments')
 export default class Comment extends Entity {
   constructor(comment: Partial<Comment>) {
     super()
@@ -34,7 +34,7 @@ export default class Comment extends Entity {
   username: string
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: "username", referencedColumnName: "username" })
+  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User
 
   @ManyToOne(() => Post, (post) => post.comments, { nullable: false })
@@ -44,8 +44,7 @@ export default class Comment extends Entity {
   @OneToMany(() => Vote, (vote) => vote.comment)
   votes: Vote[]
 
-  @Expose()
-  get voteScore(): number {
+  @Expose() get voteScore(): number {
     return this.votes?.reduce((prev, curr) => prev + (curr.value || 0), 0)
   }
 

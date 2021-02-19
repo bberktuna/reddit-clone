@@ -22,6 +22,7 @@ export interface User {
   updatedAt: string
   userImageUrn: string
   userBannerUrn: string
+  joinedSub: Sub
   // Virtuals
   userImageUrl: string
   userBannerUrl: string
@@ -37,6 +38,8 @@ export interface Sub {
   bannerUrn: string
   username: string
   posts: Post[]
+  isPrivate: boolean
+  member: User
   // Virtuals
   imageUrl: string
   bannerUrl: string

@@ -3,7 +3,7 @@
    "host": "localhost",
    "port": 5432,
    "username": "boliv",
-   "database": "laterReactORM",
+   "database": "was",
    "synchronize": true,
    "logging": true,
    "entities": [
@@ -15,7 +15,9 @@
    "subscribers": [
       "src/subscribers/**/*.ts"
    ],
-   "seeds": ["src/seeds/**/*{.ts,.js}"],
+   "seeds": [
+      "src/seeds/**/*{.ts,.js}"
+   ],
    "cli": {
       "entitiesDir": "src/entities",
       "migrationsDir": "src/migrations",

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from "express"
 import { isEmpty } from "class-validator"
 import { getRepository } from "typeorm"
 import multer from "multer"
-import path from "path"
+import path, { join } from "path"
 import fs from "fs"
 
 import User from "../entities/User"
@@ -13,7 +13,7 @@ import Post from "./../entities/Post"
 import { makeId } from "../util/helpers"
 
 const createSub = async (req: Request, res: Response) => {
-  const { name, title, description } = req.body
+  const { name, title, description, isPrivate } = req.body
 
   const user: User = res.locals.user
 
@@ -21,6 +21,7 @@ const createSub = async (req: Request, res: Response) => {
     let errors: any = {}
     if (isEmpty(name)) errors.name = "Name must not be empty"
     if (isEmpty(title)) errors.title = "Title must not be empty"
+    if (isEmpty(isPrivate)) errors.title = "You must choose type of the sub"
 
     const sub = await getRepository(Sub)
       .createQueryBuilder("sub")
@@ -37,7 +38,7 @@ const createSub = async (req: Request, res: Response) => {
   }
 
   try {
-    const sub = new Sub({ name, description, title, user })
+    const sub = new Sub({ name, description, title, user, isPrivate })
     await sub.save()
 
     return res.json(sub)
@@ -68,6 +69,25 @@ const getSub = async (req: Request, res: Response) => {
   } catch (err) {
     console.log(err)
     return res.status(404).json({ sub: "Sub not found" })
+  }
+}
+
+const joinSub = async (req: Request, res: Response) => {
+  const name = req.params.name
+  const user: User = res.locals.user
+  try {
+    const sub = await Sub.findOneOrFail({ name })
+//! BURAYA ABK
+    if (sub.isPrivate === true && sub.member !== user) {
+      const updateSubMember = new Sub({
+        member: user,
+      })
+      await updateSubMember.save()
+    }
+
+    return res.json(sub.member)
+  } catch (err) {
+    return res.status(404).json({ error: "can not join the sub" })
   }
 }
 
@@ -156,6 +176,7 @@ const searchSubs = async (req: Request, res: Response) => {
 
 const router = Router()
 
+router.put("/:name", user, auth, joinSub)
 router.post("/", user, auth, createSub)
 router.get("/:name", user, getSub)
 router.get("/search/:name", searchSubs)

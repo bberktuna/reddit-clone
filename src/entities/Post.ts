@@ -7,17 +7,17 @@ import {
   JoinColumn,
   OneToMany,
   AfterLoad,
-} from "typeorm"
-import { Exclude, Expose } from "class-transformer"
+} from 'typeorm'
+import { Exclude, Expose } from 'class-transformer'
 
-import Entity from "./Entity"
-import User from "./User"
-import { makeId, slugify } from "../util/helpers"
-import Sub from "./Sub"
-import Comment from "./Comment"
-import Vote from "./Vote"
+import Entity from './Entity'
+import User from './User'
+import { makeId, slugify } from '../util/helpers'
+import Sub from './Sub'
+import Comment from './Comment'
+import Vote from './Vote'
 
-@TOEntity("posts")
+@TOEntity('posts')
 export default class Post extends Entity {
   constructor(post: Partial<Post>) {
     super()
@@ -35,7 +35,7 @@ export default class Post extends Entity {
   @Column()
   slug: string
 
-  @Column({ nullable: true, type: "text" })
+  @Column({ nullable: true, type: 'text' })
   body: string
 
   @Column()
@@ -45,11 +45,11 @@ export default class Post extends Entity {
   username: string
 
   @ManyToOne(() => User, (user) => user.posts)
-  @JoinColumn({ name: "username", referencedColumnName: "username" })
+  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User
 
   @ManyToOne(() => Sub, (sub) => sub.posts)
-  @JoinColumn({ name: "subName", referencedColumnName: "name" })
+  @JoinColumn({ name: 'subName', referencedColumnName: 'name' })
   sub: Sub
 
   @Exclude()
@@ -60,18 +60,15 @@ export default class Post extends Entity {
   @OneToMany(() => Vote, (vote) => vote.post)
   votes: Vote[]
 
-  @Expose()
-  get url(): string {
+  @Expose() get url(): string {
     return `/r/${this.subName}/${this.identifier}/${this.slug}`
   }
 
-  @Expose()
-  get commentCount(): number {
+  @Expose() get commentCount(): number {
     return this.comments?.length
   }
 
-  @Expose()
-  get voteScore(): number {
+  @Expose() get voteScore(): number {
     return this.votes?.reduce((prev, curr) => prev + (curr.value || 0), 0)
   }
 

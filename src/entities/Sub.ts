@@ -5,6 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  OneToOne,
 } from "typeorm"
 
 import Entity from "./Entity"
@@ -26,14 +27,14 @@ export default class Sub extends Entity {
   @Column()
   title: string
 
+  @Column()
+  isPrivate: boolean
+
   @Column({ type: "text", nullable: true })
   description: string
 
   @Column({ nullable: true })
   imageUrn: string
-
-  @Column()
-  typeOfSub: string
 
   @Column({ nullable: true })
   bannerUrn: string
@@ -48,11 +49,15 @@ export default class Sub extends Entity {
   @OneToMany(() => Post, (post) => post.sub)
   posts: Post[]
 
+  @Column()
+  @OneToMany(() => User, (member) => member.joinedSub)
+  member: User[]
+
   @Expose()
   get imageUrl(): string {
     return this.imageUrn
       ? `${process.env.APP_URL}/images/${this.imageUrn}`
-      : `https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y`
+      : "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
   }
 
   @Expose()
