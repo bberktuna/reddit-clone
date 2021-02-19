@@ -6,6 +6,7 @@ import {
   JoinColumn,
   OneToMany,
   OneToOne,
+  ManyToMany,
 } from "typeorm"
 
 import Entity from "./Entity"
@@ -49,10 +50,6 @@ export default class Sub extends Entity {
   @OneToMany(() => Post, (post) => post.sub)
   posts: Post[]
 
-  @Column()
-  @OneToMany(() => User, (member) => member.joinedSub)
-  member: User[]
-
   @Expose()
   get imageUrl(): string {
     return this.imageUrn
@@ -66,4 +63,7 @@ export default class Sub extends Entity {
       ? `${process.env.APP_URL}/images/${this.bannerUrn}`
       : undefined
   }
+
+  @ManyToMany(() => User, (member) => member.joinedSubs)
+  members: User[]
 }

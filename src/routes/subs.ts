@@ -13,7 +13,7 @@ import Post from "./../entities/Post"
 import { makeId } from "../util/helpers"
 
 const createSub = async (req: Request, res: Response) => {
-  const { name, title, description, isPrivate } = req.body
+  const { name, title, description, isPrivate, members } = req.body
 
   const user: User = res.locals.user
 
@@ -77,17 +77,22 @@ const joinSub = async (req: Request, res: Response) => {
   const user: User = res.locals.user
   try {
     const sub = await Sub.findOneOrFail({ name })
-//! BURAYA ABK
-    if (sub.isPrivate === true && sub.member !== user) {
-      const updateSubMember = new Sub({
-        member: user,
+    if (sub.isPrivate === true) {
+      //TODO  if user already in a group
+      console.log("i am in the if statement")
+      const newJoinedSub = new User({
+        joinedSubs: user.joinedSubs,
       })
-      await updateSubMember.save()
-    }
 
-    return res.json(sub.member)
+      const newMemberSub = new Sub({
+        members: sub.members,
+      })
+
+      return [newJoinedSub, newMemberSub]
+    }
+    return console.log("cant get in the if statement")
   } catch (err) {
-    return res.status(404).json({ error: "can not join the sub" })
+    return console.log(err)
   }
 }
 

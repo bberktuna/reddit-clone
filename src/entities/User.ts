@@ -7,9 +7,11 @@ import {
   OneToMany,
   OneToOne,
   ManyToOne,
+  ManyToMany,
+  JoinColumn,
 } from "typeorm"
 import bcrypt from "bcrypt"
-import { Exclude } from "class-transformer"
+import { Exclude, Expose } from "class-transformer"
 
 import Entity from "./Entity"
 import Post from "./Post"
@@ -34,10 +36,6 @@ export default class User extends Entity {
   @Column({ unique: true })
   username: string
 
-  @Column()
-  @ManyToOne(() => Sub, (joinedSub) => joinedSub.member)
-  joinedSub: Sub
-
   @Exclude()
   @Column()
   @Length(6, 255, { message: "Must be at least 6 characters long" })
@@ -53,4 +51,17 @@ export default class User extends Entity {
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 6)
   }
+
+  //@OneToMany(() => Sub, (joinedSubs) => joinedSubs.members)
+  //joinedSubs: Sub
+
+  @ManyToMany(() => Sub, (sub) => sub.members)
+  joinedSubs: Sub[]
+
+  //@JoinColumn({ name: "joinedSubs", referencedColumnName: "name" })
+
+  /*
+  @Column()
+  isMember: boolean
+  */
 }
