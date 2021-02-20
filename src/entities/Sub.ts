@@ -13,6 +13,7 @@ import Entity from "./Entity"
 import User from "./User"
 import Post from "./Post"
 import { Expose } from "class-transformer"
+import { validate } from "class-validator"
 
 @TOEntity("subs")
 export default class Sub extends Entity {
@@ -64,6 +65,6 @@ export default class Sub extends Entity {
       : undefined
   }
 
-  @ManyToMany(() => User, (member) => member.joinedSubs)
+  @OneToMany(() => User, (member) => member.joinedSubs)
   members: User[]
 }

@@ -55,7 +55,7 @@ export default class User extends Entity {
   //@OneToMany(() => Sub, (joinedSubs) => joinedSubs.members)
   //joinedSubs: Sub
 
-  @ManyToMany(() => Sub, (sub) => sub.members)
+  @OneToMany(() => Sub, (sub) => sub.members)
   joinedSubs: Sub[]
 
   //@JoinColumn({ name: "joinedSubs", referencedColumnName: "name" })

@@ -77,22 +77,30 @@ const joinSub = async (req: Request, res: Response) => {
   const user: User = res.locals.user
   try {
     const sub = await Sub.findOneOrFail({ name })
+
     if (sub.isPrivate === true) {
       //TODO  if user already in a group
       console.log("i am in the if statement")
+      /*
       const newJoinedSub = new User({
-        joinedSubs: user.joinedSubs,
+        joinedSubs: sub,
       })
 
       const newMemberSub = new Sub({
-        members: sub.members,
+        members: user,
       })
 
       return [newJoinedSub, newMemberSub]
+      */
+
+      sub.members.push(user)
+      user.joinedSubs.push(sub)
+
+      return [user, sub]
     }
     return console.log("cant get in the if statement")
   } catch (err) {
-    return console.log(err)
+    return res.status(404).json({ error: "catched joinsub" })
   }
 }
 
