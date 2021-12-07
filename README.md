@@ -19,6 +19,3 @@ React, TypeORM, Nodejs, Postgres
 &. \dt
 &. \c <db-name> connect the table
 &.
-&
-
-video 4 dk 15 for migration stuff
